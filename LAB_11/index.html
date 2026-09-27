@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тортики & Тістечка</title>
+    <style>
+        /* ================= БАЗОВІ СТИЛІ ================= */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: #fff; color: #333; padding: 15px; }
+        .page-wrapper { max-width: 1400px; margin: 0 auto; }
+        
+        header { text-align: center; margin-bottom: 25px; padding-top: 10px; }
+        header h1 { font-size: 32px; font-weight: normal; color: #334; }
+        header h1 span { color: #e63946; font-weight: bold; }
+
+        /* ================= ФІЛЬТРАЦІЯ ================= */
+        .main-content { display: flex; flex-direction: column; }
+        input[type="radio"] { display: none; }
+
+        .gallery .card { display: none; }
+
+        #cat-all:checked ~ .gallery-wrap .gallery .card { display: flex; }
+        #cat-pie:checked ~ .gallery-wrap .gallery .card.cat-pie { display: flex; }
+        #cat-roll:checked ~ .gallery-wrap .gallery .card.cat-roll { display: flex; }
+        #cat-syrnyk:checked ~ .gallery-wrap .gallery .card.cat-syrnyk { display: flex; }
+        #cat-tistechko:checked ~ .gallery-wrap .gallery .card.cat-tistechko { display: flex; }
+        #cat-tort:checked ~ .gallery-wrap .gallery .card.cat-tort { display: flex; }
+
+        #cat-all:checked ~ .sidebar .filters .lbl-all,
+        #cat-pie:checked ~ .sidebar .filters .lbl-pie,
+        #cat-roll:checked ~ .sidebar .filters .lbl-roll,
+        #cat-syrnyk:checked ~ .sidebar .filters .lbl-syrnyk,
+        #cat-tistechko:checked ~ .sidebar .filters .lbl-tistechko,
+        #cat-tort:checked ~ .sidebar .filters .lbl-tort {
+            background: #d0d7df; font-weight: bold; color: #000;
+        }
+
+        /* ================= МОБІЛЬНА ВЕРСІЯ (375px - 730px) ================= */
+        .filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+        .filters label {
+            background: #edf1f4; padding: 12px; text-align: center; font-size: 14px;
+            border-radius: 4px; cursor: pointer; color: #555; transition: 0.2s;
+        }
+        .filters label:hover { background: #e2e8ed; }
+        
+        .calorie-filter { display: none; }
+
+        .gallery { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .card { 
+            display: flex; flex-direction: column; 
+            background: white; border: 1px solid #eaeaea; 
+            border-radius: 6px; padding: 15px; 
+        }
+        .card .img-wrap { width: 100%; height: 200px; margin-bottom: 10px; }
+        .card .img-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+        
+        .card-line, .card-bottom { display: none; }
+
+        footer {
+            margin-top: 40px; padding: 20px 0; border-top: 1px solid #ddd;
+            display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: #666;
+        }
+        footer .contacts { display: flex; flex-direction: column; gap: 5px; }
+        footer .contacts a { color: #3b82f6; text-decoration: none; }
+
+        /* ================= ПЛАНШЕТНА ВЕРСІЯ (730px - 1200px) ================= */
+        @media (min-width: 730px) {
+            .filters { grid-template-columns: repeat(3, 1fr); }
+            .gallery { grid-template-columns: repeat(3, 1fr); }
+            .card .img-wrap { height: 150px; }
+
+            footer { flex-direction: row; justify-content: space-between; align-items: flex-end; }
+        }
+
+        /* ================= ДЕСКТОПНА ВЕРСІЯ (від 1200px) ================= */
+        @media (min-width: 1200px) {
+            .main-content { flex-direction: row; gap: 40px; }
+            
+            .sidebar { flex: 0 0 250px; order: 2; }
+            .gallery-wrap { flex: 1; order: 1; }
+            
+            .filters { grid-template-columns: 1fr; }
+            
+            .calorie-filter {
+                display: block; background: #f8f9fa; padding: 20px; 
+                border-radius: 4px; margin-bottom: 20px; text-align: center; border: 1px solid #eee;
+            }
+            .calorie-filter input[type="range"] { width: 100%; margin: 15px 0; }
+            .calorie-filter p { font-size: 14px; color: #555; }
+
+            .gallery { grid-template-columns: repeat(3, 1fr); }
+            
+            .card {
+                display: flex; flex-direction: column; 
+                height: 100%; padding: 15px; 
+            }
+            
+            .card-top { display: flex; flex-direction: row; gap: 15px; flex-grow: 1; }
+            
+            .card .img-wrap { width: 100px; height: 80px; margin-bottom: 0; flex-shrink: 0; }
+            .card .img-wrap img { object-fit: cover; object-position: top; } 
+            
+            .card .info { flex: 1; font-size: 14px; }
+            .card .info b { display: block; margin-top: 3px; }
+
+            .card-line { display: block; border-top: 1px solid #ddd; margin: 15px 0 10px 0; }
+            .card-bottom { display: block; font-size: 12px; color: #666; }
+
+            footer { align-items: center; }
+            footer .contacts { flex-direction: row; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <header>
+            <h1>Тортики <span>&</span> Тістечка</h1>
+        </header>
+
+        <main class="main-content">
+            <input type="radio" name="cat" id="cat-all" checked>
+            <input type="radio" name="cat" id="cat-pie">
+            <input type="radio" name="cat" id="cat-roll">
+            <input type="radio" name="cat" id="cat-syrnyk">
+            <input type="radio" name="cat" id="cat-tistechko">
+            <input type="radio" name="cat" id="cat-tort">
+
+            <aside class="sidebar">
+                <div class="calorie-filter">
+                    <p>Калорії у порції</p>
+                    <input type="range" min="0" max="400" value="200">
+                    <p>Від 0 до 400 кКал</p>
+                </div>
+                
+                <div class="filters">
+                    <label for="cat-pie" class="lbl-pie">Пиріг</label>
+                    <label for="cat-roll" class="lbl-roll">Рулет</label>
+                    <label for="cat-syrnyk" class="lbl-syrnyk">Сирники</label>
+                    <label for="cat-tistechko" class="lbl-tistechko">Тістечко</label>
+                    <label for="cat-tort" class="lbl-tort">Торт</label>
+                    <label for="cat-all" class="lbl-all">Скинути фільтр</label>
+                </div>
+            </aside>
+
+            <section class="gallery-wrap">
+                <div class="gallery">
+                    
+                    <!-- 1. Чізкейк -->
+                    <div class="card cat-tort">
+                        <div class="card-top">
+                            <div class="img-wrap"><img src="images/cheesecake.jpg" alt="Чізкейк"></div>
+                            <div class="info">Торт: <b>Чізкейк Нью-Йорк</b></div>
+                        </div>
+                        <div class="card-line"></div>
+                        <div class="card-bottom">Калорії у порції 320 кКал</div>
+                    </div>
+                    
+                    <!-- 2. Еклери -->
+                    <div class="card cat-tistechko">
+                        <div class="card-top">
+                            <div class="img-wrap"><img src="images/ekleri.jpg" alt="Еклери"></div>
+                            <div class="info">Тістечко: <b>Еклери шоколадні</b></div>
+                        </div>
+                        <div class="card-line"></div>
+                        <div class="card-bottom">Калорії у порції 280 кКал</div>
+                    </div>
+                    
+                    <!-- 3. Панкейки -->
+                    <div class="card cat-syrnyk">
+                        <div class="card-top">
+                            <div class="img-wrap"><img src="images/pancakes.jpg" alt="Панкейки"></div>
+                            <div class="info">Сирники: <b>Панкейки пухкі</b></div>
+                        </div>
+                        <div class="card-line"></div>
+                        <div class="card-bottom">Калорії у порції 310 кКал</div>
+                    </div>
+                    
+                    <!-- 4. Тістечко "Картопля" -->
+                    <div class="card cat-tistechko">
+                        <div class="card-top">
+                            <div class="img-wrap"><img src="images/potato.jpg" alt="Картопля"></div>
+                            <div class="info">Тістечко: <b>Картопля</b></div>
+                        </div>
+                        <div class="card-line"></div>
+                        <div class="card-bottom">Калорії у порції 410 кКал</div>
+                    </div>
+                    
+                    <!-- 5. Пиріг -->
+                    <div class="card cat-pie">
+                        <div class="card-top">
+                            <div class="img-wrap"><img src="images/pyrih.jpg" alt="Пиріг"></div>
+                            <div class="info">Пиріг: <b>Ягідний тертий</b></div>
+                        </div>
+                        <div class="card-line"></div>
+                        <div class="card-bottom">Калорії у порції 350 кКал</div>
+                    </div>
+                    
+                    <!-- 6. Рулет -->
+                    <div class="card cat-roll">
+                        <div class="card-top">
+                            <div class="img-wrap"><img src="images/rulet.jpg" alt="Рулет"></div>
+                            <div class="info">Рулет: <b>Бісквітний</b></div>
+                        </div>
+                        <div class="card-line"></div>
+                        <div class="card-bottom">Калорії у порції 290 кКал</div>
+                    </div>
+                    
+                    <!-- 7. Сирники -->
+                    <div class="card cat-syrnyk">
+                        <div class="card-top">
+                            <div class="img-wrap"><img src="images/syrnyki.jpg" alt="Сирники"></div>
+                            <div class="info">Сирники: <b>Домашні класичні</b></div>
+                        </div>
+                        <div class="card-line"></div>
+                        <div class="card-bottom">Калорії у порції 250 кКал</div>
+                    </div>
+                    
+                    <!-- 8. Тірамісу -->
+                    <div class="card cat-tort">
+                        <div class="card-top">
+                            <div class="img-wrap"><img src="images/tiramisu.jpg" alt="Тірамісу"></div>
+                            <div class="info">Торт: <b>Тірамісу</b></div>
+                        </div>
+                        <div class="card-line"></div>
+                        <div class="card-bottom">Калорії у порції 380 кКал</div>
+                    </div>
+                    
+                    <!-- 9. Вафельний торт -->
+                    <div class="card cat-tort">
+                        <div class="card-top">
+                            <div class="img-wrap"><img src="images/vaflecake.jpg" alt="Вафельний торт"></div>
+                            <div class="info">Торт: <b>Вафельний</b></div>
+                        </div>
+                        <div class="card-line"></div>
+                        <div class="card-bottom">Калорії у порції 450 кКал</div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="contacts">
+                <span class="contact-label">Контакти:</span>
+                <a href="mailto:tortik@smakota.ua">tortik@smakota.ua</a>
+            </div>
+            <div class="copyright">© 2019 Smakota</div>
+        </footer>
+    </div>
+</body>
+</html>
